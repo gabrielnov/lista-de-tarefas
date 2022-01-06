@@ -1,47 +1,52 @@
-let save = document.querySelector('.save');
-let cancel = document.querySelector('.cancel');
-let newTopic = document.querySelector('.new_topic');
-var tasks = [];
-//EVENTOS
+let save = document.querySelector(".save");
+save.addEventListener("click", saveTopic);
 
-save.addEventListener('click', saveTopic);
-
-
-//FUNÇÕES 
+let topicInput = document.querySelector(".new_topic");
 
 function showTopics() {
 
+  let elements = document.getElementsByClassName("tasks");
+  while(elements.length > 0){
+    elements[0].parentNode.removeChild(elements[0]);
+  }
     
-        var parentElement = document.body;
-        var topicSaved = document.createElement('h2');
-        var topicSavedContent = document.createTextNode(tasks[tasks.length - 1]);
-        var trashIcon = document.createElement('i');
-
-        
-        var index = tasks.indexOf(newTopic.value);
-        trashIcon.addEventListener('click', function(){
-            tasks.splice(index, 1);
-            console.log(tasks);
-            console.log('chamando a função...o index é:', index);
-        });
-
-        trashIcon.setAttribute('class', 'fas fa-trash');
-        document.body.appendChild(trashIcon);
-        
+  for (var i = 0; i < tasks.length; i++) {
     
-        topicSaved.appendChild(topicSavedContent);
-        parentElement.appendChild(topicSaved);
+    var divTasks = document.createElement("div");
+    divTasks.className = "tasks";
 
+    var pTask = document.createElement("p");
+
+    var taskText = document.createTextNode(tasks[i]);
+    pTask.appendChild(taskText);
+
+    var trashIcon = document.createElement("i");
+    trashIcon.setAttribute("onClick",`deleteTopic(${i})`);
+    
+    trashIcon.setAttribute("class", "fas fa-trash");
+
+    divTasks.appendChild(trashIcon);
+    divTasks.appendChild(pTask);
+
+    document.body.appendChild(divTasks);
+  }
 }
 
-
-
+var tasks = [];
 
 function saveTopic() {
-    tasks.push(newTopic.value)
-    
-    
-    showTopics();
-    newTopic.value = "";
+  let text = topicInput.value;
 
-} 
+  tasks.push(text);
+ topicInput.value = "";
+  showTopics();
+}
+  
+function deleteTopic(index) {
+  tasks.splice(index, 1);
+  showTopics();
+}
+
+window.onload = function () {
+  showTopics();
+};
